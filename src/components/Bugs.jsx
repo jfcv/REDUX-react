@@ -1,24 +1,35 @@
-import React, { Component, useContext, useEffect, useState } from "react";
+import React, {
+  Component,
+  useContext,
+  useEffect,
+  useState,
+  Fragment,
+} from "react";
 import { connect, useDispatch, useSelector } from "react-redux";
-import { loadBugs } from "../store/bugs";
+import { loadBugs, getUnresolvedBugs, resolveBug } from "../store/bugs";
 
 const Bugs = () => {
   const dispatch = useDispatch();
-  const bugs = useSelector((state) => state.entities.bugs.list);
+  const bugs = useSelector(getUnresolvedBugs);
 
   useEffect(() => {
     dispatch(loadBugs());
-  }, []);
+  }, [bugs]);
 
   return (
-    <div>
+    <Fragment>
       <h1>Bugs</h1>
       <ul>
         {bugs.map((bug) => (
-          <li key={bug.id}>{bug.description}</li>
+          <li key={bug.id}>
+            {bug.description}
+            <button onClick={() => dispatch(resolveBug(bug.id))}>
+              Resolve
+            </button>
+          </li>
         ))}
       </ul>
-    </div>
+    </Fragment>
   );
 };
 
